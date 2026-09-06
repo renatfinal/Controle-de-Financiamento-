@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Controle Financeiro</title>
+  <style>
+    /* TEMAS DE CORES */
+    :root {
+      /* Tema Azul (Original) */
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --accent-color: #2563eb;
+      --accent-hover: #1d4ed8;
+      --gradient-start: #1e40af;
+      --gradient-end: #2563eb;
+      --today-color: #10b981;
+      --success-color: #10b981;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: #334155;
+    }
+
+    /* Tema Verde Folha com Preto */
+    body.theme-emerald {
+      --bg-color: #090d0a;
+      --card-bg: #121a13;
+      --accent-color: #15803d;
+      --accent-hover: #166534;
+      --gradient-start: #14532d;
+      --gradient-end: #22c55e;
+      --today-color: #22c55e;
+      --success-color: #22c55e;
+      --text-main: #f0fdf4;
+      --text-muted: #86efac;
+      --border-color: #1f3a24;
+    }
+
+    /* Tema Roxo Neon + Ciano Neon */
+    body.theme-purple {
+      --bg-color: #0d0714;
+      --card-bg: #1a0f2e;
+      --accent-color: #9333ea;
+      --accent-hover: #7e22ce;
+      --gradient-start: #581c87;
+      --gradient-end: #a855f7;
+      --today-color: #06b6d4;
+      --success-color: #22d3ee;
+      --text-main: #faf5ff;
+      --text-muted: #c084fc;
+      --border-color: #3b0764;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+      transition: background-color 0.3s ease;
+    }
+
+    .app-container {
+      background-color: var(--card-bg);
+      width: 100%;
+      max-width: 480px;
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.6);
+      border: 1px solid var(--border-color);
+      transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+
+    /* Detalhe Neon para o Tema Roxo */
+    body.theme-purple .app-container {
+      box-shadow: 0 0 20px rgba(168, 85, 247, 0.2), 0 0 10px rgba(6, 182, 212, 0.15);
+    }
+
+    .top-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .top-header h2 {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .theme-toggle-btn {
+      background: var(--border-color);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-main);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 600;
+    }
+
+    body.theme-purple .theme-toggle-btn {
+      border-color: #06b6d4;
+      color: #22d3ee;
+    }
+
+    /* Abas em Carrossel (Rolagem Horizontal) */
+    .tabs-wrapper {
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .tabs-container {
+      display: flex;
+      background-color: rgba(0, 0, 0, 0.3);
+      padding: 6px;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      gap: 6px;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
+    .tabs-container::-webkit-scrollbar {
+      display: none;
+    }
+
+    .tab-btn {
+      flex: 0 0 auto;
+      padding: 8px 14px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn.active {
+      background: var(--accent-color);
+      color: #ffffff;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+    }
+
+    body.theme-purple .tab-btn.active {
+      box-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
+    }
+
+    /* Calendário */
+    .calendar-card {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border-color);
+    }
+
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .calendar-header h3 {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .calendar-nav-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 6px;
+    }
+
+    .calendar-nav-btn:hover {
+      background: var(--border-color);
+      color: #fff;
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+      text-align: center;
+    }
+
+    .day-name {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .day-number {
+      padding: 8px 0;
+      font-size: 0.85rem;
+      border-radius: 8px;
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.03);
+      transition: all 0.2s;
+    }
+
+    .day-number:hover {
+      background: var(--border-color);
+    }
+
+    .day-number.today {
+      border: 2px solid var(--today-color);
+      color: var(--today-color);
+      font-weight: bold;
+    }
+
+    body.theme-purple .day-number.today {
+      box-shadow: 0 0 8px rgba(6, 182, 212, 0.6);
+    }
+
+    .day-number.selected {
+      background: var(--accent-color) !important;
+      color: #fff !important;
+      font-weight: bold;
+      border: none;
+    }
+
+    body.theme-purple .day-number.selected {
+      box-shadow: 0 0 10px rgba(168, 85, 247, 0.8);
+    }
+
+    .day-number.empty {
+      background: transparent;
+      cursor: default;
+    }
+
+    .info-vencimento {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .input-group {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      background-color: rgba(0, 0, 0, 0.3);
+      color: var(--text-main);
+      font-size: 0.95rem;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: var(--accent-color);
+    }
+
+    body.theme-purple input:focus {
+      border-color: #06b6d4;
+      box-shadow: 0 0 8px rgba(6, 182, 212, 0.4);
+    }
+
+    /* Painel Fixo de Resultados */
+    .dashboard-panel {
+      background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+      border-radius: 16px;
+      padding: 16px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    body.theme-purple .dashboard-panel {
+      box-shadow: 0 0 15px rgba(168, 85, 247, 0.3);
+    }
+
+    .stat-card {
+      background: rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(8px);
+      padding: 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      text-align: center;
+    }
+
+    body.theme-purple .stat-card {
+      border-color: rgba(6, 182, 212, 0.3);
+    }
+
+    .stat-card.clickable {
+      cursor: pointer;
+      transition: transform 0.2s, background 0.2s;
+    }
+
+    .stat-card.clickable:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .stat-card span {
+      display: block;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #e2e8f0;
+      margin-bottom: 4px;
+    }
+
+    .stat-card strong {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    body.theme-purple .stat-card strong {
+      color: #22d3ee;
+      text-shadow: 0 0 6px rgba(34, 211, 238, 0.6);
+    }
+
+    .click-hint {
+      font-size: 0.65rem !important;
+      color: #e2e8f0 !important;
+      margin-top: 4px;
+      text-transform: none !important;
+    }
+
+    /* Modal / Lista de Parcelas */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      padding: 20px;
+      z-index: 1000;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-content {
+      background: var(--card-bg);
+      border-radius: 20px;
+      width: 100%;
+      max-width: 440px;
+      max-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+    }
+
+    body.theme-purple .modal-content {
+      border-color: #06b6d4;
+      box-shadow: 0 0 25px rgba(6, 182, 212, 0.2);
+    }
+
+    .modal-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-header h2 {
+      font-size: 1.1rem;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    .modal-body {
+      padding: 16px;
+      overflow-y: auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+      gap: 10px;
+    }
+
+    .parcela-item {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.2s;
+    }
+
+    .parcela-item.paga {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: var(--success-color);
+    }
+
+    body.theme-purple .parcela-item.paga {
+      background: rgba(6, 182, 212, 0.15);
+      border-color: #06b6d4;
+    }
+
+    .parcela-item.paga .parcela-label {
+      text-decoration: line-through;
+      color: var(--text-muted);
+    }
+
+    .parcela-label {
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .btn-check {
+      background: var(--border-color);
+      border: none;
+      color: #fff;
+      width: 26px;
+      height: 26px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+    }
+
+    .parcela-item.paga .btn-check {
+      background: var(--success-color);
+    }
+
+    body.theme-purple .parcela-item.paga .btn-check {
+      background: #06b6d4;
+      color: #000;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <div class="top-header">
+      <h2>Painel Financeiro</h2>
+      <button class="theme-toggle-btn" onclick="alternarTema()">
+        🎨 <span id="nome-tema">Azul</span>
+      </button>
+    </div>
+
+    <!-- Navegação por Abas com Rolagem Horizontal -->
+    <div class="tabs-wrapper">
+      <div class="tabs-container" id="tabs-container">
+        <button class="tab-btn active" id="tab-financiamento" onclick="trocarAba('financiamento')">Financiamento</button>
+        <button class="tab-btn" id="tab-financiamento2" onclick="trocarAba('financiamento2')">Financiamento 02</button>
+        <button class="tab-btn" id="tab-consorcio" onclick="trocarAba('consorcio')">Consórcio</button>
+        <button class="tab-btn" id="tab-consorcio2" onclick="trocarAba('consorcio2')">Consórcio 02</button>
+        <button class="tab-btn" id="tab-emprestimo" onclick="trocarAba('emprestimo')">Empréstimo</button>
+        <button class="tab-btn" id="tab-emprestimo2" onclick="trocarAba('emprestimo2')">Empréstimo 02</button>
+      </div>
+    </div>
+
+    <!-- Calendário -->
+    <div class="calendar-card">
+      <div class="calendar-header">
+        <button class="calendar-nav-btn" onclick="mudarMes(-1)">&#10094;</button>
+        <h3 id="calendar-month-year">Mês Ano</h3>
+        <button class="calendar-nav-btn" onclick="mudarMes(1)">&#10095;</button>
+      </div>
+      <div class="calendar-grid" id="calendar-days">
+        <!-- Renderizado via JS -->
+      </div>
+      <div class="info-vencimento" id="info-vencimento">
+        Selecione o dia do vencimento da parcela
+      </div>
+    </div>
+
+    <!-- Total de Parcelas -->
+    <div class="input-group">
+      <label for="total-parcelas">Total de Parcelas do Contrato</label>
+      <input type="number" id="total-parcelas" value="60" min="1" onchange="atualizarTotalParcelas()">
+    </div>
+
+    <!-- Painel Fixo de Resultados -->
+    <div class="dashboard-panel">
+      <div class="stat-card clickable" onclick="abrirModal()">
+        <span>Restantes</span>
+        <strong id="parcelas-restantes">0x</strong>
+        <span class="click-hint">Clique para gerenciar</span>
+      </div>
+      <div class="stat-card">
+        <span>Tempo Restante</span>
+        <strong id="anos-restantes">0 anos</strong>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Modal de Parcelas -->
+  <div class="modal-overlay" id="modal-parcelas">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modal-titulo">Gerenciamento de Parcelas</h2>
+        <button class="close-btn" onclick="fecharModal()">&times;</button>
+      </div>
+      <div class="modal-body" id="lista-parcelas-container">
+        <!-- Renderizado via JS -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let abaAtual = 'financiamento';
+    let dataExibicaoCalendario = new Date();
+    let temaAtualIndex = 0;
+
+    const temas = [
+      { nome: 'Azul', classe: '' },
+      { nome: 'Verde Folha', classe: 'theme-emerald' },
+      { nome: 'Roxo Neon', classe: 'theme-purple' }
+    ];
+
+    const nomesAbas = {
+      financiamento: "Financiamento",
+      financiamento2: "Financiamento 02",
+      consorcio: "Consórcio",
+      consorcio2: "Consórcio 02",
+      emprestimo: "Empréstimo",
+      emprestimo2: "Empréstimo 02"
+    };
+
+    let dadosApp = {
+      financiamento: { total: 60, diaVencimento: null, pagas: [] },
+      financiamento2: { total: 60, diaVencimento: null, pagas: [] },
+      consorcio: { total: 48, diaVencimento: null, pagas: [] },
+      consorcio2: { total: 48, diaVencimento: null, pagas: [] },
+      emprestimo: { total: 36, diaVencimento: null, pagas: [] },
+      emprestimo2: { total: 36, diaVencimento: null, pagas: [] }
+    };
+
+    const mesesNomes = [
+      "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+      "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+    ];
+
+    // CARREGAR E SALVAR DADOS
+    function carregarDados() {
+      const dadosSalvos = localStorage.getItem('dadosControleFinanceiro_v3');
+      if (dadosSalvos) {
+        try {
+          dadosApp = JSON.parse(dadosSalvos);
+        } catch (e) {
+          console.error("Erro ao carregar dados", e);
+        }
+      }
+
+      const temaSalvo = localStorage.getItem('temaControleFinanceiro_v3');
+      if (temaSalvo !== null) {
+        temaAtualIndex = parseInt(temaSalvo) || 0;
+        aplicarTema();
+      }
+    }
+
+    function salvarDados() {
+      localStorage.setItem('dadosControleFinanceiro_v3', JSON.stringify(dadosApp));
+    }
+
+    // ALTERAR TEMA
+    function alternarTema() {
+      temaAtualIndex = (temaAtualIndex + 1) % temas.length;
+      localStorage.setItem('temaControleFinanceiro_v3', temaAtualIndex);
+      aplicarTema();
+    }
+
+    function aplicarTema() {
+      const tema = temas[temaAtualIndex];
+      document.body.className = tema.classe;
+      document.getElementById('nome-tema').innerText = tema.nome;
+    }
+
+    // TROCAR ABAS
+    function trocarAba(novaAba) {
+      abaAtual = novaAba;
+
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      const activeBtn = document.getElementById(`tab-${novaAba}`);
+      activeBtn.classList.add('active');
+
+      activeBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+
+      document.getElementById('total-parcelas').value = dadosApp[abaAtual].total;
+
+      renderizarCalendario();
+      atualizarCalculos();
+    }
+
+    // CALENDÁRIO
+    function renderizarCalendario() {
+      const container = document.getElementById('calendar-days');
+      const monthYearText = document.getElementById('calendar-month-year');
+      container.innerHTML = '';
+
+      const ano = dataExibicaoCalendario.getFullYear();
+      const mes = dataExibicaoCalendario.getMonth();
+      monthYearText.innerText = `${mesesNomes[mes]} ${ano}`;
+
+      const diasSemana = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+      diasSemana.forEach(dia => {
+        const div = document.createElement('div');
+        div.className = 'day-name';
+        div.innerText = dia;
+        container.appendChild(div);
+      });
+
+      const primeiroDiaSemana = new Date(ano, mes, 1).getDay();
+      const totalDiasMes = new Date(ano, mes + 1, 0).getDate();
+
+      for (let i = 0; i < primeiroDiaSemana; i++) {
+        const div = document.createElement('div');
+        div.className = 'day-number empty';
+        container.appendChild(div);
+      }
+
+      const hoje = new Date();
+      const diaHoje = hoje.getDate();
+      const mesHoje = hoje.getMonth();
+      const anoHoje = hoje.getFullYear();
+
+      const diaSelecionado = dadosApp[abaAtual].diaVencimento;
+
+      for (let dia = 1; dia <= totalDiasMes; dia++) {
+        const div = document.createElement('div');
+        div.className = 'day-number';
+
+        if (dia === diaHoje && mes === mesHoje && ano === anoHoje) {
+          div.classList.add('today');
+        }
+
+        if (diaSelecionado === dia) {
+          div.classList.add('selected');
+        }
+
+        div.innerText = dia;
+        div.onclick = () => selecionarDiaVencimento(dia);
+        container.appendChild(div);
+      }
+
+      atualizarInfoVencimento();
+    }
+
+    function mudarMes(delta) {
+      dataExibicaoCalendario.setMonth(dataExibicaoCalendario.getMonth() + delta);
+      renderizarCalendario();
+    }
+
+    function selecionarDiaVencimento(dia) {
+      dadosApp[abaAtual].diaVencimento = dia;
+      salvarDados();
+      renderizarCalendario();
+    }
+
+    function atualizarInfoVencimento() {
+      const info = document.getElementById('info-vencimento');
+      const dia = dadosApp[abaAtual].diaVencimento;
+      if (!dia) {
+        info.innerText = "Selecione o dia do vencimento da parcela";
+      } else {
+        info.innerText = `Vencimento configurado para todo dia ${dia}`;
+      }
+    }
+
+    // PARCELAS E CÁLCULOS
+    function atualizarTotalParcelas() {
+      const valorInput = parseInt(document.getElementById('total-parcelas').value) || 1;
+      const novoTotal = Math.max(1, valorInput);
+      dadosApp[abaAtual].total = novoTotal;
+      dadosApp[abaAtual].pagas = dadosApp[abaAtual].pagas.filter(p => p <= novoTotal);
+
+      salvarDados();
+      atualizarCalculos();
+    }
+
+    function toggleParcela(numeroParcela) {
+      const index = dadosApp[abaAtual].pagas.indexOf(numeroParcela);
+      if (index > -1) {
+        dadosApp[abaAtual].pagas.splice(index, 1);
+      } else {
+        dadosApp[abaAtual].pagas.push(numeroParcela);
+      }
+
+      salvarDados();
+      atualizarCalculos();
+      renderizarListaModal();
+    }
+
+    function atualizarCalculos() {
+      const total = dadosApp[abaAtual].total;
+      const pagas = dadosApp[abaAtual].pagas.length;
+      const restantes = Math.max(0, total - pagas);
+
+      const anos = Math.floor(restantes / 12);
+      const meses = restantes % 12;
+
+      document.getElementById('parcelas-restantes').innerText = `${restantes}x`;
+
+      let textoAnos = "";
+      if (anos > 0 && meses > 0) {
+        textoAnos = `${anos}a ${meses}m`;
+      } else if (anos > 0) {
+        textoAnos = `${anos} ${anos === 1 ? 'ano' : 'anos'}`;
+      } else {
+        textoAnos = `${meses} ${meses === 1 ? 'mês' : 'meses'}`;
+      }
+
+      document.getElementById('anos-restantes').innerText = textoAnos;
+    }
+
+    function renderizarListaModal() {
+      const container = document.getElementById('lista-parcelas-container');
+      const titulo = document.getElementById('modal-titulo');
+      
+      titulo.innerText = `Parcelas - ${nomesAbas[abaAtual]}`;
+      container.innerHTML = '';
+
+      const total = dadosApp[abaAtual].total;
+      const pagas = dadosApp[abaAtual].pagas;
+
+      for (let i = 1; i <= total; i++) {
+        const estaPaga = pagas.includes(i);
+
+        const item = document.createElement('div');
+        item.className = `parcela-item ${estaPaga ? 'paga' : ''}`;
+
+        item.innerHTML = `
+          <span class="parcela-label">${i}ª Parcela</span>
+          <button class="btn-check" onclick="toggleParcela(${i})">
+            ${estaPaga ? '✓' : ''}
+          </button>
+        `;
+
+        container.appendChild(item);
+      }
+    }
+
+    function abrirModal() {
+      renderizarListaModal();
+      document.getElementById('modal-parcelas').classList.add('active');
+    }
+
+    function fecharModal() {
+      document.getElementById('modal-parcelas').classList.remove('active');
+    }
+
+    // SUPORTE 100% OFFLINE (SERVICE WORKER AUTOMÁTICO)
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        const swCode = `
+          const CACHE_NAME = 'finance-app-v1';
+          self.addEventListener('install', e => {
+            e.waitUntil(
+              caches.open(CACHE_NAME).then(cache => cache.addAll([location.href]))
+            );
+          });
+          self.addEventListener('fetch', e => {
+            e.respondWith(
+              caches.match(e.request).then(res => res || fetch(e.request))
+            );
+          });
+        `;
+        const blob = new Blob([swCode], { type: 'application/javascript' });
+        const blobUrl = URL.createObjectURL(blob);
+        navigator.serviceWorker.register(blobUrl).catch(() => {});
+      });
+    }
+
+    // Inicialização
+    carregarDados();
+    trocarAba('financiamento');
+  </script>
+
+</body>
+</html>
