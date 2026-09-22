@@ -7,7 +7,6 @@
   <style>
     /* TEMAS DE CORES */
     :root {
-      /* Tema Azul (Original) */
       --bg-color: #0f172a;
       --card-bg: #1e293b;
       --accent-color: #2563eb;
@@ -21,7 +20,6 @@
       --border-color: #334155;
     }
 
-    /* Tema Verde Folha com Preto */
     body.theme-emerald {
       --bg-color: #090d0a;
       --card-bg: #121a13;
@@ -36,7 +34,6 @@
       --border-color: #1f3a24;
     }
 
-    /* Tema Roxo Neon + Ciano Neon */
     body.theme-purple {
       --bg-color: #0d0714;
       --card-bg: #1a0f2e;
@@ -80,7 +77,6 @@
       transition: background-color 0.3s ease, border-color 0.3s ease;
     }
 
-    /* Detalhe Neon para o Tema Roxo */
     body.theme-purple .app-container {
       box-shadow: 0 0 20px rgba(168, 85, 247, 0.2), 0 0 10px rgba(6, 182, 212, 0.15);
     }
@@ -135,9 +131,7 @@
       scrollbar-width: none;
     }
 
-    .tabs-container::-webkit-scrollbar {
-      display: none;
-    }
+    .tabs-container::-webkit-scrollbar { display: none; }
 
     .tab-btn {
       flex: 0 0 auto;
@@ -179,10 +173,7 @@
       margin-bottom: 12px;
     }
 
-    .calendar-header h3 {
-      font-size: 1rem;
-      font-weight: 600;
-    }
+    .calendar-header h3 { font-size: 1rem; font-weight: 600; }
 
     .calendar-nav-btn {
       background: transparent;
@@ -194,10 +185,7 @@
       border-radius: 6px;
     }
 
-    .calendar-nav-btn:hover {
-      background: var(--border-color);
-      color: #fff;
-    }
+    .calendar-nav-btn:hover { background: var(--border-color); color: #fff; }
 
     .calendar-grid {
       display: grid;
@@ -220,11 +208,10 @@
       cursor: pointer;
       background: rgba(255, 255, 255, 0.03);
       transition: all 0.2s;
+      position: relative;
     }
 
-    .day-number:hover {
-      background: var(--border-color);
-    }
+    .day-number:hover { background: var(--border-color); }
 
     .day-number.today {
       border: 2px solid var(--today-color);
@@ -247,21 +234,52 @@
       box-shadow: 0 0 10px rgba(168, 85, 247, 0.8);
     }
 
-    .day-number.empty {
-      background: transparent;
-      cursor: default;
+    /* Dia de vencimento já "baixado" (passado) */
+    .day-number.vencido::after {
+      content: '';
+      position: absolute;
+      bottom: 3px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--success-color);
     }
 
+    .day-number.empty { background: transparent; cursor: default; }
+
     .info-vencimento {
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       color: var(--text-muted);
       text-align: center;
       margin-top: 10px;
+      line-height: 1.45;
     }
 
-    .input-group {
-      margin-bottom: 16px;
+    .info-vencimento strong { color: var(--text-main); }
+
+    .info-vencimento .auto-tag {
+      display: inline-block;
+      margin-top: 3px;
+      color: var(--success-color);
+      font-weight: 600;
     }
+
+    .link-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      text-decoration: underline;
+      font-size: 0.72rem;
+      cursor: pointer;
+      margin-left: 6px;
+      padding: 0;
+    }
+
+    .link-btn:hover { color: var(--text-main); }
+
+    .input-group { margin-bottom: 16px; }
 
     label {
       display: block;
@@ -281,9 +299,7 @@
       outline: none;
     }
 
-    input:focus {
-      border-color: var(--accent-color);
-    }
+    input:focus { border-color: var(--accent-color); }
 
     body.theme-purple input:focus {
       border-color: #06b6d4;
@@ -317,6 +333,8 @@
     body.theme-purple .stat-card {
       border-color: rgba(6, 182, 212, 0.3);
     }
+
+    .stat-card.full { grid-column: 1 / -1; }
 
     .stat-card.clickable {
       cursor: pointer;
@@ -373,10 +391,7 @@
       z-index: 1000;
     }
 
-    .modal-overlay.active {
-      opacity: 1;
-      pointer-events: auto;
-    }
+    .modal-overlay.active { opacity: 1; pointer-events: auto; }
 
     .modal-content {
       background: var(--card-bg);
@@ -400,11 +415,17 @@
       border-bottom: 1px solid var(--border-color);
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      align-items: flex-start;
+      gap: 10px;
     }
 
-    .modal-header h2 {
-      font-size: 1.1rem;
+    .modal-header h2 { font-size: 1.1rem; }
+
+    .modal-sub {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+      line-height: 1.4;
     }
 
     .close-btn {
@@ -413,6 +434,7 @@
       color: var(--text-muted);
       font-size: 1.5rem;
       cursor: pointer;
+      line-height: 1;
     }
 
     .modal-body {
@@ -444,15 +466,18 @@
       border-color: #06b6d4;
     }
 
+    /* Parcela baixada automaticamente pelo vencimento */
+    .parcela-item.auto {
+      border-style: dashed;
+      border-width: 2px;
+    }
+
     .parcela-item.paga .parcela-label {
       text-decoration: line-through;
       color: var(--text-muted);
     }
 
-    .parcela-label {
-      font-size: 0.9rem;
-      font-weight: 600;
-    }
+    .parcela-label { font-size: 0.9rem; font-weight: 600; }
 
     .btn-check {
       background: var(--border-color);
@@ -466,11 +491,10 @@
       align-items: center;
       justify-content: center;
       font-size: 0.8rem;
+      flex-shrink: 0;
     }
 
-    .parcela-item.paga .btn-check {
-      background: var(--success-color);
-    }
+    .parcela-item.paga .btn-check { background: var(--success-color); }
 
     body.theme-purple .parcela-item.paga .btn-check {
       background: #06b6d4;
@@ -482,7 +506,7 @@
 <body>
 
   <div class="app-container">
-    
+
     <div class="top-header">
       <h2>Painel Financeiro</h2>
       <button class="theme-toggle-btn" onclick="alternarTema()">
@@ -534,6 +558,11 @@
         <span>Tempo Restante</span>
         <strong id="anos-restantes">0 anos</strong>
       </div>
+      <div class="stat-card full">
+        <span>Parcelas Quitadas</span>
+        <strong id="parcelas-pagas">0x</strong>
+        <span class="click-hint" id="proximo-vencimento">Defina o dia do vencimento no calendário</span>
+      </div>
     </div>
 
   </div>
@@ -542,7 +571,10 @@
   <div class="modal-overlay" id="modal-parcelas">
     <div class="modal-content">
       <div class="modal-header">
-        <h2 id="modal-titulo">Gerenciamento de Parcelas</h2>
+        <div>
+          <h2 id="modal-titulo">Gerenciamento de Parcelas</h2>
+          <p class="modal-sub">As parcelas com borda tracejada são baixadas automaticamente no dia do vencimento. Clique para marcar/desmarcar manualmente.</p>
+        </div>
         <button class="close-btn" onclick="fecharModal()">&times;</button>
       </div>
       <div class="modal-body" id="lista-parcelas-container">
@@ -571,13 +603,24 @@
       emprestimo2: "Empréstimo 02"
     };
 
+    // Modelo padrão de cada aba
+    function modeloAba(total) {
+      return {
+        total: total,
+        diaVencimento: null,   // dia do mês (1-31)
+        dataInicio: null,      // "YYYY-MM-01" -> mês da 1ª parcela
+        pagas: [],             // marcações MANUAIS (extras)
+        naoPagas: []           // parcelas baixadas automaticamente que o usuário desmarcou
+      };
+    }
+
     let dadosApp = {
-      financiamento: { total: 60, diaVencimento: null, pagas: [] },
-      financiamento2: { total: 60, diaVencimento: null, pagas: [] },
-      consorcio: { total: 48, diaVencimento: null, pagas: [] },
-      consorcio2: { total: 48, diaVencimento: null, pagas: [] },
-      emprestimo: { total: 36, diaVencimento: null, pagas: [] },
-      emprestimo2: { total: 36, diaVencimento: null, pagas: [] }
+      financiamento: modeloAba(60),
+      financiamento2: modeloAba(60),
+      consorcio: modeloAba(48),
+      consorcio2: modeloAba(48),
+      emprestimo: modeloAba(36),
+      emprestimo2: modeloAba(36)
     };
 
     const mesesNomes = [
@@ -585,12 +628,24 @@
       "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
     ];
 
-    // CARREGAR E SALVAR DADOS
+    /* ==========================================================
+       CARREGAR E SALVAR DADOS
+       ========================================================== */
     function carregarDados() {
       const dadosSalvos = localStorage.getItem('dadosControleFinanceiro_v3');
       if (dadosSalvos) {
         try {
-          dadosApp = JSON.parse(dadosSalvos);
+          const parsed = JSON.parse(dadosSalvos);
+          // Mescla com o modelo padrão (garante novas propriedades)
+          Object.keys(dadosApp).forEach(k => {
+            const base = modeloAba(dadosApp[k].total);
+            dadosApp[k] = Object.assign(base, parsed[k] || {});
+            if (!Array.isArray(dadosApp[k].pagas)) dadosApp[k].pagas = [];
+            if (!Array.isArray(dadosApp[k].naoPagas)) dadosApp[k].naoPagas = [];
+            if (typeof dadosApp[k].total !== 'number' || dadosApp[k].total < 1) dadosApp[k].total = base.total;
+            if (!('dataInicio' in dadosApp[k])) dadosApp[k].dataInicio = null;
+            if (!('diaVencimento' in dadosApp[k])) dadosApp[k].diaVencimento = null;
+          });
         } catch (e) {
           console.error("Erro ao carregar dados", e);
         }
@@ -607,7 +662,9 @@
       localStorage.setItem('dadosControleFinanceiro_v3', JSON.stringify(dadosApp));
     }
 
-    // ALTERAR TEMA
+    /* ==========================================================
+       TEMA
+       ========================================================== */
     function alternarTema() {
       temaAtualIndex = (temaAtualIndex + 1) % temas.length;
       localStorage.setItem('temaControleFinanceiro_v3', temaAtualIndex);
@@ -620,14 +677,15 @@
       document.getElementById('nome-tema').innerText = tema.nome;
     }
 
-    // TROCAR ABAS
+    /* ==========================================================
+       ABAS
+       ========================================================== */
     function trocarAba(novaAba) {
       abaAtual = novaAba;
 
       document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
       const activeBtn = document.getElementById(`tab-${novaAba}`);
       activeBtn.classList.add('active');
-
       activeBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
 
       document.getElementById('total-parcelas').value = dadosApp[abaAtual].total;
@@ -636,7 +694,69 @@
       atualizarCalculos();
     }
 
-    // CALENDÁRIO
+    /* ==========================================================
+       NÚCLEO: CÁLCULO AUTOMÁTICO DAS PARCELAS PELO VENCIMENTO
+       ========================================================== */
+
+    // Retorna a data de vencimento da parcela "indice" (0 = 1ª parcela)
+    function obterDataVencimento(dataInicio, indice, dia) {
+      const ano = dataInicio.getFullYear();
+      const mes = dataInicio.getMonth() + indice;
+      const ultimoDiaDoMes = new Date(ano, mes + 1, 0).getDate();
+      const diaFinal = Math.min(dia, ultimoDiaDoMes); // ex.: dia 31 em fevereiro -> 28/29
+      return new Date(ano, mes, diaFinal);
+    }
+
+    // Lista de parcelas que já venceram (baixa automática)
+    function calcularParcelasAutomaticas(item) {
+      const lista = [];
+      if (!item.diaVencimento || !item.dataInicio) return lista;
+
+      const inicio = new Date(item.dataInicio + 'T00:00:00');
+      if (isNaN(inicio.getTime())) return lista;
+
+      const hoje = new Date();
+      hoje.setHours(0, 0, 0, 0);
+
+      for (let i = 0; i < item.total; i++) {
+        const venc = obterDataVencimento(inicio, i, item.diaVencimento);
+        if (venc.getTime() <= hoje.getTime()) {
+          lista.push(i + 1);
+        } else {
+          break; // as próximas ainda não venceram
+        }
+      }
+      return lista;
+    }
+
+    // Conjunto final de parcelas quitadas (automáticas + manuais - desmarcadas)
+    function obterPagasEfetivas(item) {
+      const set = new Set(calcularParcelasAutomaticas(item));
+      item.pagas.forEach(p => { if (p <= item.total) set.add(p); });
+      item.naoPagas.forEach(p => set.delete(p));
+      return set;
+    }
+
+    function obterProximoVencimento(item) {
+      if (!item.diaVencimento || !item.dataInicio) return null;
+      const inicio = new Date(item.dataInicio + 'T00:00:00');
+      if (isNaN(inicio.getTime())) return null;
+
+      const hoje = new Date();
+      hoje.setHours(0, 0, 0, 0);
+
+      for (let i = 0; i < item.total; i++) {
+        const venc = obterDataVencimento(inicio, i, item.diaVencimento);
+        if (venc.getTime() > hoje.getTime()) {
+          return { numero: i + 1, data: venc };
+        }
+      }
+      return null;
+    }
+
+    /* ==========================================================
+       CALENDÁRIO
+       ========================================================== */
     function renderizarCalendario() {
       const container = document.getElementById('calendar-days');
       const monthYearText = document.getElementById('calendar-month-year');
@@ -668,7 +788,21 @@
       const mesHoje = hoje.getMonth();
       const anoHoje = hoje.getFullYear();
 
-      const diaSelecionado = dadosApp[abaAtual].diaVencimento;
+      const item = dadosApp[abaAtual];
+      const diaSelecionado = item.diaVencimento;
+
+      // Descobre se o vencimento deste mês exibido já passou
+      let vencimentoJaPassou = false;
+      if (item.diaVencimento && item.dataInicio) {
+        const inicio = new Date(item.dataInicio + 'T00:00:00');
+        const hojeZero = new Date();
+        hojeZero.setHours(0, 0, 0, 0);
+        const ultimoDiaMes = new Date(ano, mes + 1, 0).getDate();
+        const vencMes = new Date(ano, mes, Math.min(item.diaVencimento, ultimoDiaMes));
+        // Só marca se estiver dentro do período do contrato
+        const indiceMes = (ano - inicio.getFullYear()) * 12 + (mes - inicio.getMonth());
+        vencimentoJaPassou = indiceMes >= 0 && indiceMes < item.total && vencMes.getTime() <= hojeZero.getTime();
+      }
 
       for (let dia = 1; dia <= totalDiasMes; dia++) {
         const div = document.createElement('div');
@@ -680,6 +814,10 @@
 
         if (diaSelecionado === dia) {
           div.classList.add('selected');
+        }
+
+        if (diaSelecionado === dia && vencimentoJaPassou) {
+          div.classList.add('vencido');
         }
 
         div.innerText = dia;
@@ -695,39 +833,82 @@
       renderizarCalendario();
     }
 
+    // Ao clicar num dia: define o dia do vencimento E o mês exibido como mês da 1ª parcela
     function selecionarDiaVencimento(dia) {
-      dadosApp[abaAtual].diaVencimento = dia;
+      const item = dadosApp[abaAtual];
+      const ano = dataExibicaoCalendario.getFullYear();
+      const mes = dataExibicaoCalendario.getMonth();
+
+      item.diaVencimento = dia;
+      item.dataInicio = `${ano}-${String(mes + 1).padStart(2, '0')}-01`;
+
       salvarDados();
       renderizarCalendario();
-    }
-
-    function atualizarInfoVencimento() {
-      const info = document.getElementById('info-vencimento');
-      const dia = dadosApp[abaAtual].diaVencimento;
-      if (!dia) {
-        info.innerText = "Selecione o dia do vencimento da parcela";
-      } else {
-        info.innerText = `Vencimento configurado para todo dia ${dia}`;
-      }
-    }
-
-    // PARCELAS E CÁLCULOS
-    function atualizarTotalParcelas() {
-      const valorInput = parseInt(document.getElementById('total-parcelas').value) || 1;
-      const novoTotal = Math.max(1, valorInput);
-      dadosApp[abaAtual].total = novoTotal;
-      dadosApp[abaAtual].pagas = dadosApp[abaAtual].pagas.filter(p => p <= novoTotal);
-
-      salvarDados();
       atualizarCalculos();
     }
 
+    function limparVencimento() {
+      const item = dadosApp[abaAtual];
+      item.diaVencimento = null;
+      item.dataInicio = null;
+      item.naoPagas = [];
+      salvarDados();
+      renderizarCalendario();
+      atualizarCalculos();
+    }
+
+    function atualizarInfoVencimento() {
+      const item = dadosApp[abaAtual];
+      const info = document.getElementById('info-vencimento');
+
+      if (!item.diaVencimento || !item.dataInicio) {
+        info.innerHTML = "Selecione no calendário o dia e o mês da <strong>1ª parcela</strong>";
+        return;
+      }
+
+      const inicio = new Date(item.dataInicio + 'T00:00:00');
+      const auto = calcularParcelasAutomaticas(item).length;
+
+      info.innerHTML =
+        `Vencimento todo dia <strong>${item.diaVencimento}</strong> • 1ª parcela em ` +
+        `<strong>${mesesNomes[inicio.getMonth()]}/${inicio.getFullYear()}</strong>` +
+        `<button class="link-btn" onclick="limparVencimento()">remover</button><br>` +
+        `<span class="auto-tag">${auto} parcela(s) baixada(s) automaticamente</span>`;
+    }
+
+    /* ==========================================================
+       PARCELAS E CÁLCULOS
+       ========================================================== */
+    function atualizarTotalParcelas() {
+      const valorInput = parseInt(document.getElementById('total-parcelas').value) || 1;
+      const novoTotal = Math.max(1, valorInput);
+      const item = dadosApp[abaAtual];
+
+      item.total = novoTotal;
+      item.pagas = item.pagas.filter(p => p <= novoTotal);
+      item.naoPagas = item.naoPagas.filter(p => p <= novoTotal);
+
+      salvarDados();
+      atualizarCalculos();
+      if (document.getElementById('modal-parcelas').classList.contains('active')) {
+        renderizarListaModal();
+      }
+    }
+
     function toggleParcela(numeroParcela) {
-      const index = dadosApp[abaAtual].pagas.indexOf(numeroParcela);
-      if (index > -1) {
-        dadosApp[abaAtual].pagas.splice(index, 1);
+      const item = dadosApp[abaAtual];
+      const automatica = calcularParcelasAutomaticas(item).includes(numeroParcela);
+
+      if (automatica) {
+        // Baixada pelo vencimento: alterna na lista de "desmarcadas"
+        const idx = item.naoPagas.indexOf(numeroParcela);
+        if (idx > -1) item.naoPagas.splice(idx, 1);
+        else item.naoPagas.push(numeroParcela);
       } else {
-        dadosApp[abaAtual].pagas.push(numeroParcela);
+        // Ainda não venceu: marcação manual
+        const idx = item.pagas.indexOf(numeroParcela);
+        if (idx > -1) item.pagas.splice(idx, 1);
+        else item.pagas.push(numeroParcela);
       }
 
       salvarDados();
@@ -736,51 +917,69 @@
     }
 
     function atualizarCalculos() {
-      const total = dadosApp[abaAtual].total;
-      const pagas = dadosApp[abaAtual].pagas.length;
+      const item = dadosApp[abaAtual];
+      const total = item.total;
+      const pagas = obterPagasEfetivas(item).size;
       const restantes = Math.max(0, total - pagas);
 
       const anos = Math.floor(restantes / 12);
       const meses = restantes % 12;
 
       document.getElementById('parcelas-restantes').innerText = `${restantes}x`;
+      document.getElementById('parcelas-pagas').innerText = `${pagas}x`;
 
       let textoAnos = "";
-      if (anos > 0 && meses > 0) {
-        textoAnos = `${anos}a ${meses}m`;
-      } else if (anos > 0) {
-        textoAnos = `${anos} ${anos === 1 ? 'ano' : 'anos'}`;
-      } else {
-        textoAnos = `${meses} ${meses === 1 ? 'mês' : 'meses'}`;
-      }
+      if (anos > 0 && meses > 0) textoAnos = `${anos}a ${meses}m`;
+      else if (anos > 0) textoAnos = `${anos} ${anos === 1 ? 'ano' : 'anos'}`;
+      else textoAnos = `${meses} ${meses === 1 ? 'mês' : 'meses'}`;
 
       document.getElementById('anos-restantes').innerText = textoAnos;
+
+      // Próximo vencimento
+      const elProx = document.getElementById('proximo-vencimento');
+      const prox = obterProximoVencimento(item);
+      if (prox) {
+        const d = String(prox.data.getDate()).padStart(2, '0');
+        const m = String(prox.data.getMonth() + 1).padStart(2, '0');
+        elProx.innerText = `Próximo: ${d}/${m}/${prox.data.getFullYear()} (${prox.numero}ª parcela)`;
+      } else if (item.diaVencimento) {
+        elProx.innerText = 'Todas as parcelas foram quitadas 🎉';
+      } else {
+        elProx.innerText = 'Defina o dia do vencimento no calendário';
+      }
+
+      atualizarInfoVencimento();
     }
 
+    /* ==========================================================
+       MODAL
+       ========================================================== */
     function renderizarListaModal() {
       const container = document.getElementById('lista-parcelas-container');
       const titulo = document.getElementById('modal-titulo');
-      
+      const item = dadosApp[abaAtual];
+
       titulo.innerText = `Parcelas - ${nomesAbas[abaAtual]}`;
       container.innerHTML = '';
 
-      const total = dadosApp[abaAtual].total;
-      const pagas = dadosApp[abaAtual].pagas;
+      const automaticas = new Set(calcularParcelasAutomaticas(item));
+      const pagasEfetivas = obterPagasEfetivas(item);
 
-      for (let i = 1; i <= total; i++) {
-        const estaPaga = pagas.includes(i);
+      for (let i = 1; i <= item.total; i++) {
+        const paga = pagasEfetivas.has(i);
+        const auto = automaticas.has(i);
 
-        const item = document.createElement('div');
-        item.className = `parcela-item ${estaPaga ? 'paga' : ''}`;
+        const el = document.createElement('div');
+        el.className = 'parcela-item' + (paga ? ' paga' : '') + (auto ? ' auto' : '');
 
-        item.innerHTML = `
+        el.innerHTML = `
           <span class="parcela-label">${i}ª Parcela</span>
-          <button class="btn-check" onclick="toggleParcela(${i})">
-            ${estaPaga ? '✓' : ''}
-          </button>
+          <button class="btn-check"
+                  title="${auto ? 'Baixada automaticamente pelo vencimento' : 'Marcar / desmarcar manualmente'}"
+                  onclick="toggleParcela(${i})">${paga ? '✓' : ''}</button>
         `;
 
-        container.appendChild(item);
+        container.appendChild(el);
       }
     }
 
@@ -793,7 +992,26 @@
       document.getElementById('modal-parcelas').classList.remove('active');
     }
 
-    // SUPORTE 100% OFFLINE (SERVICE WORKER AUTOMÁTICO)
+    /* ==========================================================
+       ATUALIZAÇÃO AUTOMÁTICA QUANDO VIRA O DIA
+       ========================================================== */
+    let diaVerificado = new Date().getDate();
+
+    setInterval(() => {
+      const hoje = new Date().getDate();
+      if (hoje !== diaVerificado) {
+        diaVerificado = hoje;
+        renderizarCalendario();
+        atualizarCalculos();
+        if (document.getElementById('modal-parcelas').classList.contains('active')) {
+          renderizarListaModal();
+        }
+      }
+    }, 30000);
+
+    /* ==========================================================
+       SUPORTE 100% OFFLINE (SERVICE WORKER AUTOMÁTICO)
+       ========================================================== */
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         const swCode = `
@@ -815,7 +1033,9 @@
       });
     }
 
-    // Inicialização
+    /* ==========================================================
+       INICIALIZAÇÃO
+       ========================================================== */
     carregarDados();
     trocarAba('financiamento');
   </script>
